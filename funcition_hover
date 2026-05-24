@@ -1,0 +1,15 @@
+function [theta_ddot, z_ddot] = rocket_vtol_dynamics(delta_deg, F_thrust, Iyy, L_tvc, theta)
+    m = 0.605;
+    g = 9.81;
+    delta_rad = deg2rad(delta_deg);
+    theta_rad = deg2rad(theta);
+
+    % Trục Pitch — lực đẩy tạo moment + trọng lực tạo moment lật
+    torque = F_thrust * sin(delta_rad) * L_tvc ...
+           - m * g * (L_tvc * 0.5) * sin(theta_rad);
+    theta_ddot = torque / Iyy;
+
+    % Trục Z (Cao độ)
+    F_vertical = F_thrust * cos(delta_rad + theta_rad);
+    z_ddot = (F_vertical - m*g) / m;
+end

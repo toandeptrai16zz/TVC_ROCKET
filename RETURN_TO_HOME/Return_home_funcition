@@ -1,0 +1,22 @@
+function [theta_setpoint, phase] = rth_logic(x, z, x_home, z_target, z_home)
+    altitude = -z;
+    x_error = x_home - x;
+
+    if altitude < z_target - 0.5
+        phase = 1;
+        theta_setpoint = 0;
+
+    elseif abs(x_error) > 0.3
+        phase = 2;
+        % Nghiêng nhẹ để bay ngang — max 3 độ
+        theta_setpoint = max(min(0.5 * x_error, 3), -3);
+
+    elseif altitude > 0.1
+        phase = 3;
+        theta_setpoint = 0;
+
+    else
+        phase = 4;
+        theta_setpoint = 0;
+    end
+end
